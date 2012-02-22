@@ -9,18 +9,27 @@
 function get_service_name() {
     SERVICE=""
     case $1 in
-	ntpd) 
-	    SERVICE=ntpd
+	acpid) # acpi daemon
+	    SERVICE=acpid
 	    ;;
-	conntrack) # conntrack logging daemon
-	    SERVICE=conntrack-log
+	auditd) # audit daemon
+	    SERVICE=auditd
 	    ;;
 	cfexecd) # cfengine agent daemon
 	    SERVICE=cfexecd
 	    ;;
+	conntrack) # conntrack logging daemon
+	    SERVICE=conntrack-log
+	    ;;
 	crond) # cron daemon
 	    SERVICE=crond
-	    
+	    ;;
+	ntpd) 
+	    SERVICE=ntpd
+	    ;;
+	udevd)
+	    SERVICE=udevd
+	    ;;
     esac
 }
 
