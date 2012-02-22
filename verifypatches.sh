@@ -83,6 +83,7 @@ esac
 # check that we have processes to make recommendations on
 if [ "$OLD_LIBS" == "" ]; then
     echo "Everything looks in order here...";
+    exit 0;
 fi
 
 # Now lets iterate through our list and recommend a service to restart
