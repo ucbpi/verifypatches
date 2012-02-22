@@ -3,9 +3,7 @@
 # author:   Aaron Russo <arusso@berkeley.edu>
 # purpose:  check for processes holding old libraries in memory and suggest
 #           a method of fixing
-#
-
-# define our processing functions
+# date:     22-Feb-2012
 
 # function returns value in $SERVICE
 function get_service_name() {
@@ -28,6 +26,13 @@ function get_service_name() {
 
 LSOF_PATH=/usr/sbin/lsof
 ERR_NO_LSOF=1
+ERR_NOT_ROOT=2
+
+# check if we are root
+if [ "`whoami`" != "root" ]; then
+    echo You must be root!
+    exit $ERR_NOT_ROOT
+fi
 
 # check if lsof is installed
 if [ ! -x "$LSOF_PATH" ]; then
