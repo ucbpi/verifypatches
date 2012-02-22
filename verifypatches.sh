@@ -24,11 +24,23 @@ function get_service_name() {
 	crond) # cron daemon
 	    SERVICE=crond
 	    ;;
+	iscsid) # iscsi daemon
+	    SERVICE=iscsid
+	    ;;
 	ntpd) 
 	    SERVICE=ntpd
 	    ;;
-	udevd)
-	    SERVICE=udevd
+	rsyslogd)
+	    SERVICE=rsyslogd
+	    ;;
+	snmpd)
+	    SERVICE=snmpd
+	    ;;
+	'ssh'|'sshd')
+	    SERVICE=openssh-daemon
+	    ;;
+	xinetd)
+	    SERVICE=xinetd
 	    ;;
     esac
 }
