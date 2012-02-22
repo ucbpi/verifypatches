@@ -4,6 +4,7 @@
 # purpose:  check for processes holding old libraries in memory and suggest
 #           a method of fixing
 # date:     22-Feb-2012
+# url:      https://github.com/arusso23/verifypatches
 
 # function returns value in $SERVICE
 function get_service_name() {
@@ -48,6 +49,7 @@ function get_service_name() {
 LSOF_PATH=/usr/sbin/lsof
 ERR_NO_LSOF=1
 ERR_NOT_ROOT=2
+ERR_BAD_LSOF_VER=3
 
 # check if we are root
 if [ "`whoami`" != "root" ]; then
@@ -72,7 +74,16 @@ case "$LSOF_VER" in
     "4.78") # RHEL5
 	OLD_LIBS="`lsof -T | grep inode= | cut -d ' ' -f 1 | sort -u`"
 	;;
+    *) # default
+	echo "This version of lsof has not been accounted for."
+	exit $ERR_BAD_LSOF_VER
 esac
+
+
+# check that we have processes to make recommendations on
+if [ "$OLD_LIBS" == "" ]; then
+    echo "Everything looks in order here...";
+fi
 
 # Now lets iterate through our list and recommend a service to restart
 echo "$OLD_LIBS" | while read PROCESS; do
