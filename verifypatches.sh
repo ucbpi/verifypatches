@@ -46,13 +46,12 @@ echo LSOF_VER=$LSOF_VER
 
 # based on lsof version, get a list of all the process names that have old
 # libraries loaded
-if [ "$LSOF_VER" == "4.78" ]; then  # RHEL5
-    OLD_LIBS="`lsof -T | grep inode= | cut -d ' ' -f 1 | sort -u`"
-elif [ "$LSOF_VER" == "4.82" ]; then  # RHEL6
-    OLD_LIBS=""
-elif [ "$LSOF_VER" == "4.84" ]; then  # OSX 10.7 (testing mainly)
-    OLD_LIBS="ntpd\nconntrack"
-fi
+OLD_LIBS=""
+case "$LSOF_VER" in
+    "4.78") # RHEL5
+	OLD_LIBS="`lsof -T | grep inode= | cut -d ' ' -f 1 | sort -u`"
+	;;
+esac
 
 # Now lets iterate through our list and recommend a service to restart
 echo "$OLD_LIBS" | while read PROCESS; do
