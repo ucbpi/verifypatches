@@ -6,6 +6,18 @@
 # date:     22-Feb-2012
 # url:      https://github.com/arusso23/verifypatches
 
+# Load our configuration file
+# optionally, we could put everything up here, but it's cleaner to inlude the
+# external config
+CONFIG_FILE=./verifypatches.conf
+if [ -r $CONFIG_FILE ]; then
+    echo "loading config '$CONFIG_FILE'..."
+    . "$CONFIG_FILE"
+fi
+
+# Clean up our config options
+EMAIL_NOTIFICATION=`echo $EMAIL_NOTIFICATION | tr [:lower:] [:upper:]`
+
 # function returns value in $SERVICE
 function get_service_name() {
     SERVICE=""
@@ -58,7 +70,6 @@ fi
 
 # check lsof version
 LSOF_VER=`lsof -v 2>&1 | grep 'revision:\ [0-9.]\{3\}' | awk '{print $2}'`
-echo LSOF_VER=$LSOF_VER
 
 # based on lsof version, get a list of all the process names that have old
 # libraries loaded
@@ -67,15 +78,14 @@ case "$LSOF_VER" in
 	OLD_LIBS=(`lsof -T | grep inode= | cut -d ' ' -f 1 | sort -u`)
 	;;
     *) # default
-	echo "This version of lsof has not been accounted for."
+	# bad version of LSOF
+	if [ "$EMAIL_NOTIFICATION" == "YES" ]; then       
+	    echo -e "$OUTPUT" | /bin/mail -s "WARNING: This version of lsof (${LSOF_VER}) has not been account for" $EMAIL_TO	
+	else
+	    echo "This version of lsof (${LSOF_VER}) has not been accounted for."
+	fi
 	exit $ERR_BAD_LSOF_VER
 esac
-
-# check that we have processes to make recommendations on
-#if [ "$OLD_LIBS" == "" ]; then
-#    echo "Everything looks in order here...";
-#    exit 0;
-#fi
 
 # Now lets iterate through our list and recommend a service to restart
 declare -a RESTART_SERVER
@@ -90,24 +100,43 @@ for PROCESS in ${OLD_LIBS[@]}
     fi
 done
 
-#for element in ${RESTART_SERVICE[@]}
-#  do
-#  echo $element
-#done
-
-
+# Generate our output
+SERVER_RESTART_SUGGESTED=0
+SERVICE_RESTART_SUGGESTED=0
+HOSTNAME="`hostname | tr [:upper:] [:lower:]`"
+OUTPUT="Output of verifyupdates on ${HOSTNAME}:"
 if [ ${#RESTART_SERVER[0]} -gt 0 ]; then
-    echo "*** The following processes have no know affiliated service, and require a restart (or other undefinied intervention) to reload"
+    SERVER_RESTART_SUGGESTED=1
+    OUTPUT="${OUTPUT}""\n\n*** The following processes have no know affiliated service, and require a restart (or other undefinied intervention) to reload:"
     for PROCESS in ${RESTART_SERVER[@]}
-      do
-      echo $'\t'"$PROCESS"
+    do
+	OUTPUT="${OUTPUT}""\n\t${PROCESS}"
     done
+    OUTPUT="${OUTPUT}""\n\n"
+fi
+    
+if [ ${#RESTART_SERVICE[0]} -gt 0 ]; then
+    SERVICE_RESTART_SUGGESTED=1
+    OUTPUT="${OUTPUT}""\n*** The following services can be restarted:"
+    for SERVICE in ${RESTART_SERVICE[@]}
+    do
+	OUTPUT="${OUTPUT}""\n\tservice $SERVICE restart"
+    done
+    OUTPUT="${OUTPUT}""\n\n"
+fi    
+
+SUBJ_PREFIX="WARNING:";
+# if we have nothing to do, lets say so
+if [ ${#RESTART_SERVICE[0]} -eq 0 ]  && [ ${#RESTART_SERVER[0]} -eq 0 ]; then
+    OUTPUT="${OUTPUT}""\n\nNothing to do..."
+    SUBJ_PREFIX="OK:";
 fi
 
-if [ ${#RESTART_SERVICE[0]} -gt 0 ]; then
-    echo "*** The following services can be restarted"
-    for SERVICE in ${RESTART_SERVICE[@]}
-      do
-      echo $'\t'"service $SERVICE restart"
-    done
+# Send notification, either to email or to screen
+if [ "$EMAIL_NOTIFICATION" == "YES" ]; then
+    # Send an email to the user at $EMAIL_TO	
+    echo -e "$OUTPUT" | /bin/mail -s "${SUBJ_PREFIX} patch verification on ${HOSTNAME}" $EMAIL_TO
+else  # assume NO
+    # Print to screen
+    echo "$OUTPUT"
 fi

@@ -1,0 +1,11 @@
+# == Notification Options
+#
+# Change if we send email notifications
+# Default: yes
+# EMAIL_NOTIFICATION=<yes|no>
+EMAIL_NOTIFICATION='yes'
+#
+# Change who gets emailed when this script runs.
+# Default: root
+# EMAIL_TO=
+EMAIL_TO='root'
