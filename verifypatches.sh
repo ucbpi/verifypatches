@@ -107,7 +107,7 @@ HOSTNAME="`hostname | tr [:upper:] [:lower:]`"
 OUTPUT="Output of verifyupdates on ${HOSTNAME}:"
 if [ ${#RESTART_SERVER[0]} -gt 0 ]; then
     SERVER_RESTART_SUGGESTED=1
-    OUTPUT="${OUTPUT}""\n\n*** The following processes have no know affiliated service, and require a restart (or other undefinied intervention) to reload:"
+    OUTPUT="${OUTPUT}""\n\n*** The following processes have no know affiliated service, and require a restart (or other undefined intervention) to reload:"
     for PROCESS in ${RESTART_SERVER[@]}
     do
 	OUTPUT="${OUTPUT}""\n\t${PROCESS}"
