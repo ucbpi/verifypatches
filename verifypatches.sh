@@ -34,12 +34,18 @@ function get_service_name() {
 	    SERVICE=conntrack-log ;;
 	crond) # cron daemon
 	    SERVICE=crond ;;
+	exim)
+	    SERVICE=exim ;;
 	httpd)
 	    SERVICE=httpd ;;
 	iscsid) # iscsi daemon
 	    SERVICE=iscsid ;;
+	mysqld) # mysql daemon
+	    SERVICE=mysqld ;;
 	ntpd) 
 	    SERVICE=ntpd ;;
+	puppetd)
+	    SERVICE=puppetd ;;
 	rsyslogd)
 	    SERVICE=rsyslogd ;;
 	snmpd)
