@@ -77,6 +77,9 @@ case "$LSOF_VER" in
     "4.78") # RHEL5
 	OLD_LIBS=(`lsof -T | grep inode= | cut -d ' ' -f 1 | sort -u`)
 	;;
+    "4.82") # RHEL6
+	OLD_LIBS=(`lsof -T | grep DEL | grep -Ev ' /tmp/' | cut -d ' ' -f 1 | sort -u`)
+	;;
     *) # default
 	# bad version of LSOF
 	if [ "$EMAIL_NOTIFICATION" == "YES" ]; then       
