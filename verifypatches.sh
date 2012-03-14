@@ -34,6 +34,8 @@ function get_service_name() {
 	    SERVICE=conntrack-log ;;
 	crond) # cron daemon
 	    SERVICE=crond ;;
+	dsmcad) # TSM client daemon
+	    SERVICE=dsmcad ;;
 	exim)
 	    SERVICE=exim ;;
 	httpd)
@@ -42,6 +44,10 @@ function get_service_name() {
 	    SERVICE=iscsid ;;
 	mysqld) # mysql daemon
 	    SERVICE=mysqld ;;
+	nslcd) #  local LDAP name service daemon
+	    SERVICE=nslcd ;;
+	nscd) # name service cache daemon
+	    SERVICE=nscd ;;
 	ntpd) 
 	    SERVICE=ntpd ;;
 	puppetd)
