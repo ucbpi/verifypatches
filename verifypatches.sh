@@ -153,5 +153,5 @@ if [ "$EMAIL_NOTIFICATION" == "YES" ]; then
     echo -e "$OUTPUT" | /bin/mail -s "${SUBJ_PREFIX} patch verification on ${HOSTNAME}" $EMAIL_TO
 else  # assume NO
     # Print to screen
-    echo "$OUTPUT"
+    echo -e "$OUTPUT"
 fi
