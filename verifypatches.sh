@@ -89,7 +89,7 @@ case "$LSOF_VER" in
     "4.78") # RHEL5
 	OLD_LIBS=(`lsof -T | grep inode= | cut -d ' ' -f 1 | sort -u`)
 	;;
-    "4.82") # RHEL6
+    "4.82"|"4.84") # RHEL6 / FC15
 	OLD_LIBS=(`lsof -T | grep DEL | grep -Ev ' /tmp/' | grep -Ev ' /dev/zero' | cut -d ' ' -f 1 | sort -u`)
 	;;
     *) # default
