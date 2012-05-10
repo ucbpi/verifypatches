@@ -9,10 +9,13 @@
 # Load our configuration file
 # optionally, we could put everything up here, but it's cleaner to inlude the
 # external config
-CONFIG_FILE=./verifypatches.conf
+CONFIG_FILE=/etc/verifypatches.conf
 if [ -r $CONFIG_FILE ]; then
     echo "loading config '$CONFIG_FILE'..."
     . "$CONFIG_FILE"
+elif [ -r './verifypatches.conf'; then
+    echo "loading config './verifypatches.conf'..."
+    . "./verifypatches.conf"
 fi
 
 # Clean up our config options
