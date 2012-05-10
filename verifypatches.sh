@@ -81,16 +81,16 @@ if [ ! -x "$LSOF_PATH" ]; then
 fi
 
 # check lsof version
-LSOF_VER=`lsof -v 2>&1 | grep 'revision:\ [0-9.]\{3\}' | awk '{print $2}'`
+LSOF_VER=`${LSOF_PATH} -v 2>&1 | grep 'revision:\ [0-9.]\{3\}' | awk '{print $2}'`
 
 # based on lsof version, get a list of all the process names that have old
 # libraries loaded
 case "$LSOF_VER" in
     "4.78") # RHEL5
-	OLD_LIBS=(`lsof -T | grep inode= | cut -d ' ' -f 1 | sort -u`)
+	OLD_LIBS=(`${LSOF_PATH} -T | grep inode= | cut -d ' ' -f 1 | sort -u`)
 	;;
     "4.82"|"4.84") # RHEL6 / FC15
-	OLD_LIBS=(`lsof -T | grep DEL | grep -Ev ' /tmp/' | grep -Ev ' /dev/zero' | cut -d ' ' -f 1 | sort -u`)
+	OLD_LIBS=(`${LSOF_PATH} -T | grep DEL | grep -Ev ' /tmp/' | grep -Ev ' /dev/zero' | cut -d ' ' -f 1 | sort -u`)
 	;;
     *) # default
 	# bad version of LSOF
