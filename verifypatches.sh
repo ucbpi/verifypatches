@@ -55,6 +55,8 @@ function get_service_name() {
 	    SERVICE=ntpd ;;
 	puppetd)
 	    SERVICE=puppetd ;;
+	restorco)
+	    SERVICE=restorecond ;;
 	rsyslogd)
 	    SERVICE=rsyslogd ;;
 	snmpd)
